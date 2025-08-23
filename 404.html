@@ -59,3 +59,70 @@
 <script src="partials/includes.js"></script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Fractal Porn</title>
+	<link href="styles.css" rel="stylesheet" />
+	<meta name="ocs-site-verification" content="965be62463731b0314eea395abb46994" />
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header data-include="partials/header.html"></header>
+
+<main id="main">
+<section class="hero">
+<h2>4O4</h2>
+
+<p>Explore the nothing …</p>
+
+<a class="btn" href="./gallery.html">View Gallery</a></section>
+´
+</main>
+
+<footer data-include="partials/footer.html"></footer>
+
+<div class="modal" id="imageModal" role="dialog" aria-modal="true" aria-label="Image viewer"><span class="close-btn" role="button" aria-label="Close" tabindex="0"><s>&times;</s></span>
+
+<div class="modal-content"><img alt="" class="modal-img" src="" /></div>
+</div>
+<script src="partials/includes.js"></script>
+<script>
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.querySelector('.modal-img');
+        const closeBtn = document.querySelector('.close-btn');
+        const galleryImages = document.querySelectorAll('.image-container img');
+
+        galleryImages.forEach(img => {
+            img.addEventListener('click', () => {
+                modal.style.display = 'block';
+                modalImg.src = img.src;
+                modalImg.alt = img.alt;
+            });
+        });
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        closeBtn.addEventListener('click', closeModal);
+        closeBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    </script></body>
+</html>
