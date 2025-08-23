@@ -27,7 +27,7 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           private-key: ${{ secrets.SFTP_PRIVATE_KEY }}
-          port: 22
+          port: 21
           protocol: sftp
           local-dir: .
           server-dir: ./public_html/
