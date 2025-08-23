@@ -33,7 +33,8 @@
    Basic Typography Settings
 ———————————————————————————————————————————————— */
 html {
-  font-size: 13px;
+  /* Fluid base font size: 14px on tiny screens → up to 16px on large */
+  font-size: clamp(14px, 1.8vw, 16px);
   scroll-behavior: smooth;
 }
 
@@ -53,9 +54,10 @@ h1, h2, h3, h4, h5, h6 {
   color: rgba(255, 255, 255, 1);
 }
 
-h1 { font-size: 2.5rem; }
-h2 { font-size: 2rem; }
-h3 { font-size: 1.5rem; }
+/* Fluid headings for better scaling on small screens */
+h1 { font-size: clamp(1.75rem, 6vw, 2.5rem); }
+h2 { font-size: clamp(1.5rem, 5vw, 2rem); }
+h3 { font-size: clamp(1.25rem, 4vw, 1.5rem); }
 
 p { margin-bottom: 1rem; }
 
@@ -368,11 +370,29 @@ footer {
 }
 
 @media (max-width: 600px) {
-  section { padding: 2rem 1rem; }
-  .gallery-grid { column-count: 1; }
-  .image-container { height: 320px; }
-  h1 { font-size: 2rem; }
-  h2 { font-size: 1.75rem; }
+  section { padding: 1.5rem 1rem; }
+  header { padding: 0.75rem; }
+  nav ul { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+  nav a { display: block; width: 100%; text-align: center; padding: 0.75rem 1rem; min-height: 44px; }
+  .hero { padding: 4rem 1rem; }
+  .hero h2 { font-size: clamp(1.5rem, 8vw, 2rem); }
+  .hero p { font-size: 1rem; margin-bottom: 1.5rem; }
+  .btn { width: 100%; }
+  .gallery-grid { column-count: 1; column-gap: 1rem; }
+  .image-container { height: 240px; }
+  .footer-section { text-align: center; }
+}
+
+@media (max-width: 480px) {
+  section { padding: 1.25rem 0.75rem; }
+  .image-container { height: 220px; }
+  .backdrop { padding: 0.5rem 0.75rem; }
+  .close-btn { top: 10px; right: 15px; font-size: 48px; }
+}
+
+@media (max-width: 360px) {
+  nav a { padding: 0.6rem 0.75rem; }
+  .image-container { height: 200px; }
 }
 
 /* ——————————————————————————————————————————————
