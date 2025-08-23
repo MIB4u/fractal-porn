@@ -22,6 +22,6 @@ jobs:
           host: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           key: ${{ secrets.SFTP_PRIVATE_KEY }}
-          port: 22
+          port: 21
           source: .
           target: ./public_html/
