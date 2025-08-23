@@ -16,19 +16,12 @@ jobs:
       # - run: |
       #     rsync -a --delete --exclude 'media/**' --exclude 'uploads/**' ./ ./_site/
 
-      - name: Deploy via SFTP (SSH key)
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Deploy via SSH (scp)
+        uses: appleboy/scp-action@v0.1.7
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          host: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
-          private-key: ${{ secrets.SFTP_PRIVATE_KEY }}
+          key: ${{ secrets.SFTP_PRIVATE_KEY }}
           port: 21
-          protocol: sftp
-          local-dir: .
-          server-dir: ./public_html/
-          exclude: |
-            **/.git*
-            **/.github/**
-            .cpanel.yml
-            media/**
-            uploads/**
+          source: .
+          target: ./public_html/
