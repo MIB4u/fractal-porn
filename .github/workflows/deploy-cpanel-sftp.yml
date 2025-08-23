@@ -16,12 +16,7 @@ jobs:
       # - run: |
       #     rsync -a --delete --exclude 'media/**' --exclude 'uploads/**' ./ ./_site/
 
-      - name: Skipping deploy (missing secrets)
-        if: ${{ secrets.FTP_SERVER == '' || secrets.FTP_USERNAME == '' || secrets.SFTP_PRIVATE_KEY == '' }}
-        run: echo "SFTP deploy skipped: missing one or more secrets (FTP_SERVER, FTP_USERNAME, SFTP_PRIVATE_KEY)."
-
       - name: Deploy via SFTP (SSH key)
-        if: ${{ secrets.FTP_SERVER != '' && secrets.FTP_USERNAME != '' && secrets.SFTP_PRIVATE_KEY != '' }}
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
