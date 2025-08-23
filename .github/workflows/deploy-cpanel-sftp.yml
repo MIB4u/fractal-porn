@@ -16,12 +16,27 @@ jobs:
       # - run: |
       #     rsync -a --delete --exclude 'media/**' --exclude 'uploads/**' ./ ./_site/
 
-      - name: Deploy via SSH (scp)
-        uses: appleboy/scp-action@v0.1.7
+      - name: Validate required secrets
+        run: |
+          if [ -z "${{ secrets.FTP_SERVER }}" ] || [ -z "${{ secrets.FTP_USERNAME }}" ] || [ -z "${{ secrets.FTP_PASSWORD }}" ]; then
+            echo "Missing required secrets: FTP_SERVER, FTP_USERNAME, and/or FTP_PASSWORD" >&2
+            exit 1
+          fi
+          echo "Secrets present. Proceeding with FTPS deploy."
+
+      - name: Deploy via FTPS (password)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          host: ${{ secrets.FTP_SERVER }}
+          server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
-          key: ${{ secrets.SFTP_PRIVATE_KEY }}
+          password: ${{ secrets.FTP_PASSWORD }}
           port: 21
-          source: .
-          target: ./public_html/
+          protocol: ftps
+          local-dir: .
+          server-dir: ./public_html/
+          exclude: |
+            **/.git*
+            **/.github/**
+            .cpanel.yml
+            media/**
+            uploads/**
