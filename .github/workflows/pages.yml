@@ -21,10 +21,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Prepare site without media
+        run: |
+          rsync -a --delete \
+            --exclude 'media/**' \
+            --exclude 'uploads/**' \
+            ./ ./_site/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: ./_site
 
   deploy:
     needs: build

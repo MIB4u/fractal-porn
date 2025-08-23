@@ -1,0 +1,9 @@
+# Local-only, do not commit heavy media by default
+media/
+uploads/
+
+# Node, tooling, temp (in case)
+node_modules/
+.DS_Store
+*.log
+
