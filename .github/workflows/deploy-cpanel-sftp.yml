@@ -1,0 +1,34 @@
+# .github/workflows/deploy-cpanel-sftp.yml
+name: Deploy to cPanel via SFTP
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Optionally build a _site folder like Pages; if not needed, deploy repo root
+      # - run: |
+      #     rsync -a --delete --exclude 'media/**' --exclude 'uploads/**' ./ ./_site/
+
+      - name: Deploy via SFTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT }}
+          protocol: sftp
+          local-dir: .
+          server-dir: /home/fractalj/public_html/
+          exclude: |
+            **/.git*
+            **/.github/**
+            .cpanel.yml
+            media/**
+            uploads/**

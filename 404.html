@@ -3,6 +3,24 @@
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Fractal Porn</title>
 	<link href="styles.css" rel="stylesheet" />
+  <style>
+    /* Rainbow gradient text effect */
+    .rainbow {
+      background: linear-gradient(90deg, #ff0040, #ff8a00, #ffd500, #21d19f, #00a3ff, #8a2be2, #ff0040);
+      background-size: 400% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: rainbowShift 3s linear infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .rainbow { animation: none; }
+    }
+    @keyframes rainbowShift {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+  </style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -17,6 +35,7 @@
   </p>
 </main>
   <script>
+    // Tuned glitch text: readable cadence, no overlap, reduced CPU, respects reduced motion
     const element = document.getElementById("glitchText");
 
     const variants = [
@@ -24,11 +43,34 @@
       { text: "☠ ERROR 404 ☠   This dimension does not contain what you seek …", weight: 10 },
       { text: "Signal Lost. Transmission scrambled beyond retrieval.", weight: 10 },
       { text: "[404.C0DEX]: target.page = undefined; retry ⇨∞", weight: 10 },
+      { text: "I can't lie to you about your chances, but... you have my sympathies.", weight: 10 },
       { text: "¯\\_(ツ)_/¯  There's nothing here. Or is there?", weight: 10 },
       { text: "void ∞ echo(‘meaningless request’); // try again later", weight: 10 }
     ];
 
-    const original = "¡t <3r+4¡n1y seems the requested page does not exist. Or at least not anymore. 0r m4yb3 N0T y3t …? 0r m4yb3 n0t f0r y0u?";
+    // Use whatever the page initially shows as the canonical baseline text
+    const original = element.textContent;
+
+    const config = {
+      // How long a glitch stays before returning to the original text
+      // alt text visible between 50ms and 2000ms
+      glitchDurationMs: [50, 2000],
+      // How long to wait between glitches (original text visible)
+      // original visible between 1000ms (1s) and 13000ms (13s)
+      idleIntervalMs: [1000, 13000],
+      // If user prefers reduced motion, bias durations upward but clamp to the above bounds
+      reducedMotionFactor: 2.5,
+      // Chance that a glitch chains into another glitch instead of reverting immediately
+      chainChance: 0.10,
+      // After two glitches in a row, small chance to show a third
+      chainChanceAfterTwo: 0.01,
+      // Chance that any shown text (original or glitch) appears with rainbow colours
+      rainbowChance: 0.05
+    };
+
+    function pickInRange([min, max]) {
+      return Math.floor(min + Math.random() * (max - min));
+    }
 
     function getWeightedRandomVariant() {
       const totalWeight = variants.reduce((sum, v) => sum + v.weight, 0);
@@ -40,19 +82,57 @@
       return variants[0].text; // fallback
     }
 
-    function glitchOnce() {
-      const glitchText = getWeightedRandomVariant();
-      element.innerHTML = glitchText;
-      setTimeout(() => {
-        element.innerHTML = original;
-      }, 500); // how long the glitch stays before returning
+    function setText(s) {
+      element.textContent = s;
+      // Randomly apply rainbow style
+      element.classList.remove('rainbow');
+      if (Math.random() < config.rainbowChance) {
+        element.classList.add('rainbow');
+      }
     }
 
-    // Schedule random glitch intervals between 50ms and 300ms
-    (function schedule() {
-      glitchOnce();
-      setTimeout(schedule, 50 + Math.random() * 250);
-    })();
+    const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    let timer = null;
+
+    function glitchOnceThenMaybeChain(chainCount = 0) {
+      const glitchText = getWeightedRandomVariant();
+      setText(glitchText);
+
+      const baseDuration = pickInRange(config.glitchDurationMs);
+      const duration = prefersReducedMotion
+        ? Math.min(config.glitchDurationMs[1], Math.max(config.glitchDurationMs[0], Math.round(baseDuration * config.reducedMotionFactor)))
+        : baseDuration;
+
+      setTimeout(() => {
+        // Determine probability based on how many glitches have already been shown in this chain
+        const probability = chainCount === 0
+          ? config.chainChance
+          : (chainCount === 1 ? (config.chainChanceAfterTwo || 0) : 0);
+
+        if (Math.random() < probability) {
+          // Show another glitch immediately (no original in between)
+          glitchOnceThenMaybeChain(chainCount + 1);
+        } else {
+          setText(original);
+          scheduleNext();
+        }
+      }, duration);
+    }
+
+    function scheduleNext() {
+      const baseIdle = pickInRange(config.idleIntervalMs);
+      const idle = prefersReducedMotion
+        ? Math.min(config.idleIntervalMs[1], Math.max(config.idleIntervalMs[0], Math.round(baseIdle * config.reducedMotionFactor)))
+        : baseIdle;
+
+      timer = setTimeout(() => {
+        glitchOnceThenMaybeChain(0);
+      }, idle);
+    }
+
+    // kick it off
+    scheduleNext();
   </script>
 
 <footer data-include="partials/footer.html"></footer>
