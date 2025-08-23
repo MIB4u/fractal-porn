@@ -379,6 +379,41 @@ footer {
 }
 
 /* ——————————————————————————————————————————————
+   Backdrop utilities (for readability over images)
+———————————————————————————————————————————————— */
+/* Generic backdrop for any text block */
+.backdrop {
+  display: inline-block;
+  background: rgba(0, 0, 0, 0.64);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.36);
+}
+
+/* Tighter variant for single-line headings/links */
+.backdrop--tight {
+  padding: 0.25em 0.5em;
+  border-radius: 0.4em;
+}
+
+/* Optional blur enhancement where supported */
+.backdrop--blur {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .backdrop--blur {
+    -webkit-backdrop-filter: blur(8px) saturate(1.2);
+    backdrop-filter: blur(8px) saturate(1.2);
+  }
+}
+
+/* Subtle text shadow to further increase contrast on complex imagery */
+.backdrop, .backdrop * {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* ——————————————————————————————————————————————
    Glitch Animation Utility
 ———————————————————————————————————————————————— */
 /* Base glitchable element; Space Mono everywhere */
