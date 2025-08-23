@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Fractal Porn</title>
+	<link href="styles.css" rel="stylesheet" />
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header data-include="partials/header.html"></header>
+<main id="main">
+  <h1 align="center" style="margin-top: 20vh; font-size: 3em;">
+    4Ö4 – f0ur, 0h FOUR!!
+  </h1>
+
+  <p id="glitchText" align="center" style="font-size: 1.3em; margin: 1em 10%;">
+    ¡t &lt;3r+4¡n1y seems the requested page does not exist. Or at least not anymore. 0r m4yb3 N0T y3t …? 0r m4yb3 n0t 4 u?
+  </p>
+</main>
+  <script>
+    const element = document.getElementById("glitchText");
+
+    const variants = [
+      { text: "It <3r+4in1y 533M5 the re3qu35+5+3D P463 D035 N0+ 3xI5T. 0r at least not anymore. 0r m4yb3 N0T y3t …? 0r m4yb3 n0t f0r y0u?", weight: 10 },
+      { text: "☠ ERROR 404 ☠   This dimension does not contain what you seek …", weight: 10 },
+      { text: "Signal Lost. Transmission scrambled beyond retrieval.", weight: 10 },
+      { text: "[404.C0DEX]: target.page = undefined; retry ⇨∞", weight: 10 },
+      { text: "¯\\_(ツ)_/¯  There's nothing here. Or is there?", weight: 10 },
+      { text: "void ∞ echo(‘meaningless request’); // try again later", weight: 10 }
+    ];
+
+    const original = "¡t <3r+4¡n1y seems the requested page does not exist. Or at least not anymore. 0r m4yb3 N0T y3t …? 0r m4yb3 n0t f0r y0u?";
+
+    function getWeightedRandomVariant() {
+      const totalWeight = variants.reduce((sum, v) => sum + v.weight, 0);
+      let rand = Math.random() * totalWeight;
+      for (const v of variants) {
+        if (rand < v.weight) return v.text;
+        rand -= v.weight;
+      }
+      return variants[0].text; // fallback
+    }
+
+    function glitchOnce() {
+      const glitchText = getWeightedRandomVariant();
+      element.innerHTML = glitchText;
+      setTimeout(() => {
+        element.innerHTML = original;
+      }, 500); // how long the glitch stays before returning
+    }
+
+    // Schedule random glitch intervals between 50ms and 300ms
+    (function schedule() {
+      glitchOnce();
+      setTimeout(schedule, 50 + Math.random() * 250);
+    })();
+  </script>
+
+<footer data-include="partials/footer.html"></footer>
+<script src="partials/includes.js"></script>
+</body>
+</html>

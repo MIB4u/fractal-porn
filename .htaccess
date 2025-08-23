@@ -1,0 +1,65 @@
+<IfModule pagespeed_module>
+	ModPagespeed off
+</IfModule>
+
+<IfModule mod_expires.c>
+	ExpiresActive On
+	ExpiresDefault A0
+	ExpiresByType image/gif A691200
+	ExpiresByType image/png A691200
+	ExpiresByType image/jpeg A691200
+	ExpiresByType text/css A691200
+	ExpiresByType text/javascript A691200
+	ExpiresByType application/javascript A691200
+	ExpiresByType font/otf A691200
+	ExpiresByType font/ttf A691200
+	ExpiresByType font/woff A691200
+	ExpiresByType font/woff2 A691200
+</IfModule>
+
+<FilesMatch "^(web\.config)$">
+	<IfModule mod_authz_core.c>
+		Require all denied
+	</IfModule>
+	<IfModule !mod_authz_core.c>
+		Order allow,deny
+	</IfModule>
+</FilesMatch>
+ErrorDocument 401 "Unauthorized"
+ErrorDocument 403 "Forbidden"
+ErrorDocument 404 /404.html
+<IfModule mod_negotiation.c>
+	#Options -MultiViews
+</IfModule>
+RewriteEngine On
+RewriteBase /
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%1]
+RewriteCond %{HTTP:X-Server-Addr} ^(.*)
+RewriteRule .* - [E=HTTP_X_SERVER_ADDR:%1]
+
+# Allow ACME and other well-known paths
+RewriteRule ^\.well-known/.+ - [L]
+
+# Block non-browser user agents (best-effort; UA can be spoofed)
+RewriteCond %{HTTP_USER_AGENT} ^$ [OR]
+RewriteCond %{HTTP_USER_AGENT} (curl|wget|httpie|lwp-request|python-requests|libwww|httrack|go-http-client|java|apache-httpclient|restsharp|aiohttp|okhttp|powershell|fetch) [NC]
+RewriteRule ^ - [F]
+
+# Restrict HTTP methods to safe ones
+RewriteCond %{REQUEST_METHOD} !^(GET|HEAD|OPTIONS)$
+RewriteRule ^ - [F]
+
+# Force non-www to HTTPS
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+
+DirectoryIndex index.php index.cgi index.html
+RewriteCond %{REQUEST_FILENAME} !-f [OR]
+RewriteCond %{REQUEST_URI} ^\/(js\/(main\.js|bootstrap\.min\.js)|css\/([0-9a-f]+\.css|common\.css|site\.css|bootstrap\.min\.css)|sitemap\.xml)$
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ ncsitebuilder/$1 [L,QSA]
+
+
+#### PERSISTENT CONTENT ####
