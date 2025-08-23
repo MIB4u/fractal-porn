@@ -1,0 +1,89 @@
+name: Update Changelog on Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  update-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get release info
+        id: release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const {owner, repo} = context.repo;
+            const tag = context.payload.release.tag_name;
+            const title = context.payload.release.name || tag;
+            const body = context.payload.release.body || '';
+            const url = context.payload.release.html_url;
+            return { tag, title, body, url };
+
+      - name: Update CHANGELOG.md
+        id: changelog
+        run: |
+          set -euo pipefail
+          TAG="${{ steps.release.outputs.tag }}"
+          TITLE="${{ steps.release.outputs.title }}"
+          BODY=$(printf "%s" "${{ steps.release.outputs.body }}")
+          URL="${{ steps.release.outputs.url }}"
+          DATE=$(date -u +%Y-%m-%d)
+
+          if [ -f CHANGELOG.md ]; then
+            cp CHANGELOG.md CHANGELOG.md.bak
+          else
+            echo "# Changelog" > CHANGELOG.md
+            echo "" >> CHANGELOG.md
+            echo "All notable changes to this project will be documented in this file." >> CHANGELOG.md
+            echo "" >> CHANGELOG.md
+            echo "The format is inspired by Keep a Changelog, and this project adheres to Semantic Versioning." >> CHANGELOG.md
+            echo "" >> CHANGELOG.md
+          fi
+
+          TMP=$(mktemp)
+          {
+            echo "## [${TAG}] - ${DATE}"
+            echo ""
+            if [ -n "${TITLE}" ] && [ "${TITLE}" != "${TAG}" ]; then
+              echo "Title: ${TITLE}"
+              echo ""
+            fi
+            if [ -n "${BODY}" ]; then
+              echo "${BODY}" | sed 's/\r$//' 
+              echo ""
+            else
+              echo "- No notes provided."
+              echo ""
+            fi
+            echo "[${TAG}]: ${URL}"
+            echo ""
+          } > "$TMP"
+
+          # Insert new entry at top after header lines
+          awk 'BEGIN{printed=0} {print} NR==1 && !printed {printed=1; while((getline l < "'$TMP'")>0) print l}' CHANGELOG.md > CHANGELOG.md.new
+          mv CHANGELOG.md.new CHANGELOG.md
+          rm -f "$TMP"
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md
+          if git diff --cached --quiet; then
+            echo "No changelog changes to commit."
+            exit 0
+          fi
+          git commit -m "chore(changelog): update for ${{ steps.release.outputs.tag }}"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
