@@ -8,6 +8,8 @@ on:
 
 jobs:
   deploy:
+    # Only run if required secrets are present
+    if: ${{ secrets.FTP_SERVER != '' && secrets.FTP_USERNAME != '' && secrets.SFTP_PRIVATE_KEY != '' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,13 +18,13 @@ jobs:
       # - run: |
       #     rsync -a --delete --exclude 'media/**' --exclude 'uploads/**' ./ ./_site/
 
-      - name: Deploy via SFTP
+      - name: Deploy via SFTP (SSH key)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          port: ${{ secrets.FTP_PORT }}
+          private-key: ${{ secrets.SFTP_PRIVATE_KEY }}
+          port: 22
           protocol: sftp
           local-dir: .
           server-dir: /home/fractalj/public_html/
