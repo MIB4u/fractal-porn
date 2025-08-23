@@ -332,6 +332,10 @@ footer {
   background-color: var(--primary-color);
 }
 
+/* Center-align heading in sections explicitly marked as centered (e.g., Connect) */
+.footer-section--center h3 { text-align: center; }
+.footer-section--center h3::after { left: 50%; transform: translateX(-50%); }
+
 .footer-section a { color: rgba(160, 160, 160, 1); }
 .footer-section a:hover { color: var(--primary-color); }
 
