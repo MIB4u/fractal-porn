@@ -18,8 +18,8 @@ jobs:
 
       - name: Validate required secrets
         run: |
-          if [ -z "${{ secrets.FTP_SERVER }}" ] || [ -z "${{ secrets.FTP_USERNAME }}" ] || [ -z "${{ secrets.FTP_PASSWORD }}" ]; then
-            echo "Missing required secrets: FTP_SERVER, FTP_USERNAME, and/or FTP_PASSWORD" >&2
+          if [ -z "${{ secrets.FTP_SERVER }}" ] || [ -z "${{ secrets.FTP_USERNAME }}" ] || [ -z "${{ secrets.SFTP_PASSWORD }}" ]; then
+            echo "Missing required secrets: FTP_SERVER, FTP_USERNAME, and/or SFTP_PASSWORD" >&2
             exit 1
           fi
           echo "Secrets present. Proceeding with FTPS deploy."
@@ -29,7 +29,7 @@ jobs:
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
+          password: ${{ secrets.SFTP_PASSWORD }}
           port: 21
           protocol: ftps
           local-dir: .
