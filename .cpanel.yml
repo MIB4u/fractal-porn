@@ -1,0 +1,14 @@
+# .cpanel.yml
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH="/home/fractalj/public_html"
+    # Create deploy path if missing
+    - mkdir -p "$DEPLOYPATH"
+    # Sync tracked site files, excluding media/ and uploads/, and ignore .git
+    # --delete removes files that were deleted in git, but preserves excluded paths.
+    - /usr/bin/rsync -a --delete \
+        --exclude 'media/**' \
+        --exclude 'uploads/**' \
+        --exclude '.git/**' \
+        ./ "$DEPLOYPATH"/
