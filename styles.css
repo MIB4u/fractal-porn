@@ -275,6 +275,16 @@ nav a:hover {
   transform: perspective(1200px) translateX(-40%) rotateY(18deg) scale(0.98);
 }
 
+/* 3D carousell effect (vertical) */
+/* Entering image comes from the bottom with slight X-rotation */
+.bg-rotator .bg.fx-carousell-vertical.before-enter {
+  transform: perspective(1200px) translateY(30%) rotateX(14deg) scale(0.98);
+}
+/* Leaving image exits to the top with opposite X-rotation */
+.bg-rotator .bg.fx-carousell-vertical.leaving {
+  transform: perspective(1200px) translateY(-30%) rotateX(-14deg) scale(0.98);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bg-rotator .bg { transition: none !important; }
 }

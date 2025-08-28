@@ -222,7 +222,8 @@ function setActiveNav(container) {
     'slide-left', 'slide-right', 'slide-up', 'slide-down',
     'blur',
     'rotate',
-    'carousell'
+'carousell',
+    'carousell-vertical'
   ];
 
   function pickEffect() {
