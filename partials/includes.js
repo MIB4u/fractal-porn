@@ -201,7 +201,7 @@ function setActiveNav(container) {
   // Insert as first element of <body> so it paints behind all content
   document.body.insertBefore(container, document.body.firstChild);
 
-  const overlay = 'linear-gradient(0deg, rgba(0,0,0,0.60), rgba(0,0,0,0.40))';
+  const overlay = 'linear-gradient(0deg, rgba(0,0,0,0.75), rgba(0,0,0,0.55))';
   const setBg = (el, url) => { el.style.backgroundImage = `${overlay}, url("${url}")`; };
 
   const preload = (url) => new Promise((resolve, reject) => {
