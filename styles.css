@@ -200,10 +200,73 @@ nav a:hover {
    Hero Section
 ———————————————————————————————————————————————— */
 .hero {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background: transparent;
   color: rgba(255, 255, 255, 1);
   text-align: center;
   padding: 6rem 1rem;
+}
+
+/* ——————————————————————————————————————————————
+   Background Rotator (site-wide)
+———————————————————————————————————————————————— */
+.bg-rotator {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none; /* ensure it never blocks interaction */
+}
+
+.bg-rotator .bg {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0;
+  transition: opacity var(--bgfx-dur, 1s) var(--bgfx-ease, ease),
+              transform var(--bgfx-dur, 1s) var(--bgfx-ease, ease),
+              filter var(--bgfx-dur, 1s) var(--bgfx-ease, ease);
+  will-change: opacity, transform, filter;
+  transform: translate3d(0, 0, 0) scale(1);
+  /* Slightly darken and add a bit of saturation for readability */
+  filter: brightness(0.6) saturate(1.1);
+}
+
+.bg-rotator .bg.is-active { opacity: 1; }
+
+/* Randomized transition effects for background rotator */
+/* Fade uses default opacity transition; transforms unchanged */
+.bg-rotator .bg.fx-fade {}
+
+/* Zoom in/out */
+.bg-rotator .bg.fx-zoom-in.before-enter { transform: scale(1.08); }
+.bg-rotator .bg.fx-zoom-in.leaving      { transform: scale(1.08); }
+
+.bg-rotator .bg.fx-zoom-out.before-enter { transform: scale(0.92); }
+.bg-rotator .bg.fx-zoom-out.leaving      { transform: scale(0.92); }
+
+/* Slides */
+.bg-rotator .bg.fx-slide-left.before-enter  { transform: translateX(8%); }
+.bg-rotator .bg.fx-slide-left.leaving       { transform: translateX(-8%); }
+
+.bg-rotator .bg.fx-slide-right.before-enter { transform: translateX(-8%); }
+.bg-rotator .bg.fx-slide-right.leaving      { transform: translateX(8%); }
+
+.bg-rotator .bg.fx-slide-up.before-enter    { transform: translateY(6%); }
+.bg-rotator .bg.fx-slide-up.leaving         { transform: translateY(-6%); }
+
+.bg-rotator .bg.fx-slide-down.before-enter  { transform: translateY(-6%); }
+.bg-rotator .bg.fx-slide-down.leaving       { transform: translateY(6%); }
+
+/* Blur (keep base brightness/saturation) */
+.bg-rotator .bg.fx-blur.before-enter { filter: brightness(0.6) saturate(1.1) blur(8px); }
+.bg-rotator .bg.fx-blur.leaving      { filter: brightness(0.6) saturate(1.1) blur(8px); }
+
+/* Subtle rotate */
+.bg-rotator .bg.fx-rotate.before-enter { transform: rotate(1.5deg) scale(1.02); }
+.bg-rotator .bg.fx-rotate.leaving      { transform: rotate(-1.5deg) scale(1.02); }
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-rotator .bg { transition: none !important; }
 }
 
 .hero h2 { font-size: 2.5rem; margin-bottom: 1.5rem; }
@@ -267,6 +330,7 @@ nav a:hover {
 .gallery-item:hover { transform: translateY(-10px); }
 
 .image-container {
+  position: relative;
   height: 400px;
   overflow: hidden;
   background-color: var(--dark-color);
@@ -279,9 +343,28 @@ nav a:hover {
   transition: transform 1.5s ease;
 }
 
-.gallery-item:hover .image-container img { transform: scale(1.5); }
+ .gallery-item:hover .image-container img { transform: scale(1.5); }
+ 
+ /* Ensure paused canvas overlays match image sizing/transition */
+ .image-container .paused-canvas,
+ .placeholder-image .paused-canvas,
+ .modal-content .paused-canvas {
+   position: absolute;
+   top: 0;
+   left: 0;
+   display: block;
+   width: 100%;
+   height: 100%;
+   /* Mirror the smooth zoom effect */
+   transition: transform 1.5s ease;
+   border: 2px double var(--primary-color);
+   box-shadow: 0 0 20px rgba(0, 0, 0, 0.75);
+ }
 
+ .gallery-item:hover .image-container .paused-canvas { transform: scale(1.5); }
+ 
 .placeholder-image {
+  position: relative;
   height: 800px;
   background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
   color: rgba(255, 255, 255, 1);
