@@ -411,7 +411,7 @@ nav a:hover {
 ———————————————————————————————————————————————— */
 footer {
   background-color: var(--header-footer-bg);
-  color: var(--muted-text);
+  color: var(--light-color);
   padding: 3rem 1rem 1rem;
 }
 
@@ -441,8 +441,8 @@ footer {
 .footer-section--center h3 { text-align: center; }
 .footer-section--center h3::after { left: 50%; transform: translateX(-50%); }
 
-.footer-section a { color: rgba(160, 160, 160, 1); }
-.footer-section a:hover { color: var(--primary-color); }
+.footer-section a { color: var(--light-color); }
+.footer-section a:hover { color: var(--focus-outline); }
 
 .footer-section ul li { margin-bottom: 0.5rem; }
 
@@ -496,6 +496,24 @@ footer {
 @media (max-width: 360px) {
   nav a { padding: 0.6rem 0.75rem; }
   .image-container { height: 200px; }
+}
+
+/* Index (home) specific tweaks */
+.home footer {
+  /* Force a fully opaque background to ensure readability over vivid backgrounds */
+  background-color: rgba(0, 0, 0, 1);
+}
+
+/* Robustly center the hero's primary call-to-action */
+.hero .btn {
+  display: block;
+  width: fit-content;
+  margin: 0.5rem auto 0;
+}
+
+@media (max-width: 600px) {
+  /* Keep the hero button centered on mobile instead of stretching full width */
+  .hero .btn { width: auto; }
 }
 
 /* ——————————————————————————————————————————————
