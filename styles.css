@@ -261,28 +261,28 @@ nav a:hover {
 .bg-rotator .bg.fx-blur.before-enter { filter: brightness(0.6) saturate(1.1) blur(8px); }
 .bg-rotator .bg.fx-blur.leaving      { filter: brightness(0.6) saturate(1.1) blur(8px); }
 
-/* Subtle rotate */
-.bg-rotator .bg.fx-rotate.before-enter { transform: rotate(1.5deg) scale(1.02); }
-.bg-rotator .bg.fx-rotate.leaving      { transform: rotate(-1.5deg) scale(1.02); }
+/* Subtle rotate (tilt randomized via CSS vars) */
+.bg-rotator .bg.fx-rotate.before-enter { transform: rotate(var(--tiltZ, 1.5deg)) scale(var(--scale, 1.02)); }
+.bg-rotator .bg.fx-rotate.leaving      { transform: rotate(var(--tiltZ-leave, -1.5deg)) scale(var(--scale, 1.02)); }
 
-/* 3D carousell effect (horizontal) */
+/* 3D carousell effect (horizontal) — tilt and shift randomized via CSS vars */
 /* Entering image comes from the right with slight Y-rotation */
 .bg-rotator .bg.fx-carousell.before-enter {
-  transform: perspective(1200px) translateX(40%) rotateY(-18deg) scale(0.98);
+  transform: perspective(var(--persp, 1200px)) translateX(var(--shiftX, 40%)) rotateY(var(--tiltY, -18deg)) scale(var(--scale, 0.98));
 }
 /* Leaving image exits to the left with opposite Y-rotation */
 .bg-rotator .bg.fx-carousell.leaving {
-  transform: perspective(1200px) translateX(-40%) rotateY(18deg) scale(0.98);
+  transform: perspective(var(--persp, 1200px)) translateX(var(--shiftX-leave, -40%)) rotateY(var(--tiltY-leave, 18deg)) scale(var(--scale, 0.98));
 }
 
-/* 3D carousell effect (vertical) */
+/* 3D carousell effect (vertical) — tilt and shift randomized via CSS vars */
 /* Entering image comes from the bottom with slight X-rotation */
 .bg-rotator .bg.fx-carousell-vertical.before-enter {
-  transform: perspective(1200px) translateY(30%) rotateX(14deg) scale(0.98);
+  transform: perspective(var(--persp, 1200px)) translateY(var(--shiftY, 30%)) rotateX(var(--tiltX, 14deg)) scale(var(--scale, 0.98));
 }
 /* Leaving image exits to the top with opposite X-rotation */
 .bg-rotator .bg.fx-carousell-vertical.leaving {
-  transform: perspective(1200px) translateY(-30%) rotateX(-14deg) scale(0.98);
+  transform: perspective(var(--persp, 1200px)) translateY(var(--shiftY-leave, -30%)) rotateX(var(--tiltX-leave, -14deg)) scale(var(--scale, 0.98));
 }
 
 @media (prefers-reduced-motion: reduce) {

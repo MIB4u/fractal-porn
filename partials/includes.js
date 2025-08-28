@@ -271,7 +271,50 @@ function setActiveNav(container) {
         const effect = pickEffect();
         clearFx(showEl);
         clearFx(hideEl);
+
+        // Ensure any previous per-effect CSS variables are cleared
+        const clearFxVars = (el) => {
+          ['--tiltY','--tiltY-leave','--shiftX','--shiftX-leave',
+           '--tiltX','--tiltX-leave','--shiftY','--shiftY-leave',
+           '--tiltZ','--tiltZ-leave','--scale','--persp']
+            .forEach(v => el.style.removeProperty(v));
+        };
+        clearFxVars(showEl);
+        clearFxVars(hideEl);
+
         if (effect && effect !== 'fade') {
+          // Randomize tilt/shift for supported effects
+          if (effect === 'carousell') {
+            const tilt = (10 + Math.random() * 12).toFixed(1); // 10–22deg
+            const shift = (28 + Math.random() * 24).toFixed(0); // 28–52%
+            // Entering from right (negative Y tilt), leaving to left (positive Y tilt)
+            showEl.style.setProperty('--tiltY', `${-tilt}deg`);
+            showEl.style.setProperty('--shiftX', `${shift}%`);
+            hideEl.style.setProperty('--tiltY-leave', `${tilt}deg`);
+            hideEl.style.setProperty('--shiftX-leave', `-${shift}%`);
+            // Optional slight scale/perspective tweaks
+            const scale = (0.97 + Math.random() * 0.02).toFixed(3); // 0.970–0.990
+            showEl.style.setProperty('--scale', scale);
+            hideEl.style.setProperty('--scale', scale);
+          } else if (effect === 'carousell-vertical') {
+            const tilt = (8 + Math.random() * 12).toFixed(1); // 8–20deg
+            const shift = (22 + Math.random() * 22).toFixed(0); // 22–44%
+            showEl.style.setProperty('--tiltX', `${tilt}deg`);
+            showEl.style.setProperty('--shiftY', `${shift}%`);
+            hideEl.style.setProperty('--tiltX-leave', `${-tilt}deg`);
+            hideEl.style.setProperty('--shiftY-leave', `-${shift}%`);
+            const scale = (0.97 + Math.random() * 0.02).toFixed(3);
+            showEl.style.setProperty('--scale', scale);
+            hideEl.style.setProperty('--scale', scale);
+          } else if (effect === 'rotate') {
+            const tilt = (0.5 + Math.random() * 2.5).toFixed(2); // 0.5–3.0deg
+            showEl.style.setProperty('--tiltZ', `${tilt}deg`);
+            hideEl.style.setProperty('--tiltZ-leave', `${-tilt}deg`);
+            const scale = (1.010 + Math.random() * 0.020).toFixed(3); // 1.010–1.030
+            showEl.style.setProperty('--scale', scale);
+            hideEl.style.setProperty('--scale', scale);
+          }
+
           showEl.classList.add(`fx-${effect}`, 'before-enter');
           hideEl.classList.add(`fx-${effect}`, 'leaving');
         } else {
@@ -297,6 +340,11 @@ function setActiveNav(container) {
         setTimeout(() => {
           clearFx(showEl);
           clearFx(hideEl);
+          // Also clear any per-effect CSS variables to avoid leakage
+          ['--tiltY','--tiltY-leave','--shiftX','--shiftX-leave',
+           '--tiltX','--tiltX-leave','--shiftY','--shiftY-leave',
+           '--tiltZ','--tiltZ-leave','--scale','--persp']
+            .forEach(v => { showEl.style.removeProperty(v); hideEl.style.removeProperty(v); });
         }, cleanupAfter);
 
         showingA = !showingA;
