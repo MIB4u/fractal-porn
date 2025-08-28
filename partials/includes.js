@@ -221,7 +221,8 @@ function setActiveNav(container) {
     'zoom-in', 'zoom-out',
     'slide-left', 'slide-right', 'slide-up', 'slide-down',
     'blur',
-    'rotate'
+    'rotate',
+    'carousell'
   ];
 
   function pickEffect() {
