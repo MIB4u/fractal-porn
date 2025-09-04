@@ -563,14 +563,14 @@ footer {
 ———————————————————————————————————————————————— */
 /* Add a subtle translucent dark background behind all main content */
 main {
-  background: rgba(0, 0, 0, 0.36);
+  background: rgba(0, 0, 0, 0.64);
 }
 
 @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
   main {
     -webkit-backdrop-filter: blur(6px) saturate(1.1);
     backdrop-filter: blur(6px) saturate(1.1);
-    background: rgba(0, 0, 0, 0.32);
+    background: rgba(0, 0, 0, 0.64);
   }
 }
 
