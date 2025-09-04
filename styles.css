@@ -410,7 +410,7 @@ nav a:hover {
    Footer Styles
 ———————————————————————————————————————————————— */
 footer {
-  background-color: var(--header-footer-bg);
+  background-color: rgba(0, 0, 0, 1);
   color: var(--light-color);
   padding: 3rem 1rem 1rem;
 }
@@ -556,6 +556,22 @@ footer {
 /* Subtle text shadow to further increase contrast on complex imagery */
 .backdrop, .backdrop * {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* ——————————————————————————————————————————————
+   Site-wide readability overlays
+———————————————————————————————————————————————— */
+/* Add a subtle translucent dark background behind all main content */
+main {
+  background: rgba(0, 0, 0, 0.36);
+}
+
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  main {
+    -webkit-backdrop-filter: blur(6px) saturate(1.1);
+    backdrop-filter: blur(6px) saturate(1.1);
+    background: rgba(0, 0, 0, 0.32);
+  }
 }
 
 /* ——————————————————————————————————————————————
