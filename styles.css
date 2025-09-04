@@ -410,9 +410,12 @@ nav a:hover {
    Footer Styles
 ———————————————————————————————————————————————— */
 footer {
-  background-color: rgba(0, 0, 0, 0.96);
+  background-color: rgba(0, 0, 0, 1);
   color: var(--light-color);
   padding: 3rem 1rem 1rem;
+  /* Ensure no backdrop/see-through effects can apply here */
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
 }
 
 .footer-content {
@@ -500,8 +503,8 @@ footer {
 
 /* Index (home) specific tweaks */
 .home footer {
-  /* Nearly opaque for readability on the home page as well */
-  background-color: rgba(0, 0, 0, 0.96);
+  /* Fully opaque on the home page as well */
+  background-color: rgba(0, 0, 0, 1);
 }
 
 /* Robustly center the hero's primary call-to-action */
@@ -572,6 +575,11 @@ main {
     backdrop-filter: blur(6px) saturate(1.1);
     background: rgba(0, 0, 0, 0.16);
   }
+}
+
+/* Improve text readability on any background inside main */
+main :where(h1,h2,h3,h4,h5,h6,p,li,a,blockquote,figcaption,label,dt,dd) {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.75);
 }
 
 /* ——————————————————————————————————————————————
