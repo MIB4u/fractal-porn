@@ -70,6 +70,17 @@ a {
 
 a:hover { color: rgba(255, 255, 255, 1); }
 
+/* Force all text to fully opaque white across the site */
+:root,
+body,
+body :where(h1,h2,h3,h4,h5,h6,p,li,a,blockquote,figcaption,small,em,strong,span,button,label,dt,dd,th,td,code,pre,mark,cite) {
+  color: rgba(255, 255, 255, 1) !important;
+  -webkit-text-fill-color: #fff;
+}
+
+/* Ensure visited links show as magenta */
+a:visited { color: #ff00ff !important; }
+
 a:focus-visible {
   outline: 2px dashed var(--focus-outline);
   outline-offset: 3px;
@@ -231,7 +242,16 @@ nav a:hover {
   filter: brightness(0.5) saturate(1.1);
 }
 
-.bg-rotator .bg.is-active { opacity: 1; }
+}.bg-rotator .bg.is-active { opacity: 1; }
+
+/* Home page: show the rotating background without darkening */
+.home .bg-rotator .bg { filter: none !important; }
+/* Keep blur effect without brightness reduction on home */
+.home .bg-rotator .bg.fx-blur.before-enter,
+.home .bg-rotator .bg.fx-blur.leaving { filter: blur(8px) !important; }
+
+/* Home page: slow down transitions to 3s */
+.home .bg-rotator { --bgfx-dur: 3s; }
 
 /* Randomized transition effects for background rotator */
 /* Fade uses default opacity transition; transforms unchanged */
@@ -599,14 +619,14 @@ main :where(h1,h2,h3,h4,h5,h6,p,li,a,blockquote,figcaption,label,dt,dd) {
 .glitch::before {
   animation: glitch-anim 500ms infinite linear alternate-reverse;
   clip: rect(0, 100%, 10%, 0);
-  color: rgba(255, 0, 85, 1);
+  color: rgba(255, 255, 255, 1);
   mix-blend-mode: screen;
 }
 
 .glitch::after {
   animation: glitch-anim 800ms infinite linear alternate-reverse;
   clip: rect(85%, 100%, 100%, 0);
-  color: rgba(0, 229, 255, 1);
+  color: rgba(255, 255, 255, 1);
   mix-blend-mode: screen;
 }
 

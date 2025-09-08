@@ -201,7 +201,8 @@ function setActiveNav(container) {
   // Insert as first element of <body> so it paints behind all content
   document.body.insertBefore(container, document.body.firstChild);
 
-  const overlay = 'linear-gradient(0deg, rgba(0,0,0,0.75), rgba(0,0,0,0.55))';
+  // Use a fully transparent overlay on the home page to avoid darkening the background
+  const overlay = 'linear-gradient(0deg, rgba(0,0,0,0), rgba(0,0,0,0))';
   const setBg = (el, url) => { el.style.backgroundImage = `${overlay}, url("${url}")`; };
 
   const preload = (url) => new Promise((resolve, reject) => {
@@ -336,7 +337,7 @@ function setActiveNav(container) {
         });
 
         // Cleanup after the transition duration (+buffer)
-        const cleanupAfter = 1100; // ms
+        const cleanupAfter = 3300; // ms (matches 3s transition duration)
         setTimeout(() => {
           clearFx(showEl);
           clearFx(hideEl);
