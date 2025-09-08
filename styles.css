@@ -42,7 +42,7 @@ body {
   font-family: 'Space Grotesk', sans-serif;
   line-height: 1.5;
   color: rgba(255, 255, 255, 1);
-  background-color: var(--background-color);
+  background-color: transparent !important;
   letter-spacing: -0.02em;
 }
 
@@ -584,12 +584,6 @@ footer {
 /* ——————————————————————————————————————————————
    Site-wide readability overlays
 ———————————————————————————————————————————————— */
-/* Add a subtle translucent dark background behind all main content */
-main {
-  background: rgba(0, 0, 0, 0.16);
-}
-
-
 /* Improve text readability on any background inside main */
 main :where(h1,h2,h3,h4,h5,h6,p,li,a,blockquote,figcaption,label,dt,dd) {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.75);
