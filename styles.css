@@ -253,6 +253,16 @@ nav a:hover {
 /* Home page: slow down transitions to 3s */
 .home .bg-rotator { --bgfx-dur: 3s; }
 
+/* Home page: remove any backdrop darkening/blur so background stays fully visible */
+.home .backdrop,
+.home .backdrop--blur,
+.home .backdrop--tight {
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
 /* Randomized transition effects for background rotator */
 /* Fade uses default opacity transition; transforms unchanged */
 .bg-rotator .bg.fx-fade {}
