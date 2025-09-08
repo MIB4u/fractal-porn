@@ -68,7 +68,7 @@ a {
   transition: color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-a:hover { color: rgba(255, 0, 136, 1); }
+a:hover { color: rgba(255, 255, 255, 1); }
 
 a:focus-visible {
   outline: 2px dashed var(--focus-outline);
@@ -174,7 +174,7 @@ header {
 
 .logo { text-align: center; margin-bottom: 1rem; }
 
-.tagline { color: var(--accent-color); }
+.tagline { color: rgba(255, 255, 255, 1); }
 
 nav ul {
   display: flex;
@@ -301,7 +301,7 @@ nav a:hover {
 .btn {
   display: inline-block;
   background: var(--dark-color);
-  color: var(--primary-color);
+  color: rgba(255, 255, 255, 1);
   padding: 0.75rem 1.5rem;
   border-radius: 4px;
   font-weight: 800;
@@ -444,7 +444,7 @@ footer {
 .footer-section--center h3 { text-align: center; }
 .footer-section--center h3::after { left: 50%; transform: translateX(-50%); }
 
-.footer-section a { color: var(--light-color); }
+.footer-section a { color: rgba(255, 255, 255, 1); }
 .footer-section a:hover { color: var(--focus-outline); }
 
 .footer-section ul li { margin-bottom: 0.5rem; }
@@ -569,13 +569,6 @@ main {
   background: rgba(0, 0, 0, 0.16);
 }
 
-@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-  main {
-    -webkit-backdrop-filter: blur(6px) saturate(1.1);
-    backdrop-filter: blur(6px) saturate(1.1);
-    background: rgba(0, 0, 0, 0.16);
-  }
-}
 
 /* Improve text readability on any background inside main */
 main :where(h1,h2,h3,h4,h5,h6,p,li,a,blockquote,figcaption,label,dt,dd) {
