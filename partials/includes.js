@@ -165,7 +165,10 @@ function setActiveNav(container) {
   const path = (location.pathname.split('/').pop() || 'index.html');
   if (path !== 'index.html' && path !== '') return; // only on home page
 
-  const images = [
+  // Build image list from the media folder dynamically when possible,
+  // otherwise fall back to a hard-coded set.
+  let images = [];
+  const defaultImages = [
     'media/Another Box.webp',
     'media/Another Box WiP.webp',
     'media/describing a Cube FINAL.webp',
@@ -182,7 +185,31 @@ function setActiveNav(container) {
     'media/This is my Mandelbox.webp'
   ];
 
-  if (!images.length) return;
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  async function discoverMediaImages() {
+    // Attempt to parse a directory listing for /media (works in local dev with python http.server)
+    try {
+      const res = await fetch('media/', { cache: 'no-cache' });
+      if (!res.ok) return [];
+      const html = await res.text();
+      const anchors = Array.from(html.matchAll(/href=["']([^"']+)["']/gi)).map(m => m[1]);
+      const exts = ['.webp', '.jpg', '.jpeg', '.png', '.gif'];
+      const files = anchors
+        .filter(href => exts.some(ext => href.toLowerCase().endsWith(ext)))
+        .map(href => href.startsWith('media/') ? href : `media/${href}`);
+      return Array.from(new Set(files));
+    } catch (e) {
+      console.warn('Media discovery failed; using defaults.', e);
+      return [];
+    }
+  }
 
   const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -242,6 +269,16 @@ function setActiveNav(container) {
   }
 
   (async function init(){
+    // Build list: try discovery first, then fall back; randomize order for variety
+    try {
+      const discovered = await discoverMediaImages();
+      images = (discovered && discovered.length) ? discovered.slice() : defaultImages.slice();
+    } catch (_) {
+      images = defaultImages.slice();
+    }
+    if (!images.length) return;
+    images = shuffle(images);
+
     // Initialize first background with a successful image
     for (let tries = 0; tries < images.length; tries++) {
       try {
