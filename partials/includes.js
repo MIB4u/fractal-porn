@@ -418,6 +418,22 @@ function setActiveNav(container) {
         showingA = !showingA;
         current = idx;
         idx = next(idx);
+
+        // If we've completed a full cycle, reshuffle for the next pass while
+        // keeping the currently displayed image as the first element to avoid jumps.
+        if (idx === 0 && images.length > 1) {
+          const nowUrl = images[current];
+          let newImages = shuffle(images.slice());
+          const pos = newImages.indexOf(nowUrl);
+          if (pos > 0) {
+            const tmp = newImages[0];
+            newImages[0] = newImages[pos];
+            newImages[pos] = tmp;
+          }
+          images = newImages;
+          current = 0;
+          idx = next(current);
+        }
       } catch (e) {
         console.warn('Background preload failed:', url, e);
         idx = next(idx);
