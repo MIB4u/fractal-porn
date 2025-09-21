@@ -193,22 +193,49 @@ function setActiveNav(container) {
     return arr;
   }
 
-  async function discoverMediaImages() {
-    // Attempt to parse a directory listing for /media (works in local dev with python http.server)
-    try {
-      const res = await fetch('media/', { cache: 'no-cache' });
-      if (!res.ok) return [];
-      const html = await res.text();
-      const anchors = Array.from(html.matchAll(/href=["']([^"']+)["']/gi)).map(m => m[1]);
-      const exts = ['.webp', '.jpg', '.jpeg', '.png', '.gif'];
-      const files = anchors
-        .filter(href => exts.some(ext => href.toLowerCase().endsWith(ext)))
-        .map(href => href.startsWith('media/') ? href : `media/${href}`);
-      return Array.from(new Set(files));
-    } catch (e) {
-      console.warn('Media discovery failed; using defaults.', e);
-      return [];
+  async function discoverMediaImages(base = 'media/', maxDepth = 2) {
+    const visited = new Set();
+    const results = new Set();
+    const exts = ['.webp', '.jpg', '.jpeg', '.png', '.gif'];
+
+    function isImage(path) {
+      const lower = path.toLowerCase();
+      return exts.some(ext => lower.endsWith(ext));
     }
+
+    function joinUrl(dir, href) {
+      if (/^https?:\/\//i.test(href)) return href;
+      if (href.startsWith('/')) return href.replace(/^\/+/, '/');
+      return dir.replace(/\/+$/, '/') + href.replace(/^\/+/, '');
+    }
+
+    async function crawl(dir, depth) {
+      const key = dir.replace(/\/+$/, '/') + `#${depth}`;
+      if (visited.has(key) || depth < 0) return;
+      visited.add(key);
+      try {
+        const res = await fetch(dir, { cache: 'no-cache' });
+        if (!res.ok) return;
+        const html = await res.text();
+        const hrefs = Array.from(html.matchAll(/href=["']([^"']+)["']/gi)).map(m => m[1]);
+        for (const href of hrefs) {
+          if (!href || href.startsWith('?') || href.startsWith('#') || href.startsWith('../')) continue;
+          const full = joinUrl(dir, href);
+          if (/\/$/.test(href)) {
+            // Directory; avoid self and parent
+            await crawl(full, depth - 1);
+          } else if (isImage(href)) {
+            const normalized = full.startsWith('media/') ? full : (full.includes('/media/') ? full : joinUrl('media/', href));
+            results.add(normalized);
+          }
+        }
+      } catch (e) {
+        // Ignore and continue; discovery is best-effort
+      }
+    }
+
+    await crawl(base, maxDepth);
+    return Array.from(results);
   }
 
   const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -230,13 +257,16 @@ function setActiveNav(container) {
 
   // Use a fully transparent overlay on the home page to avoid darkening the background
   const overlay = 'linear-gradient(0deg, rgba(0,0,0,0), rgba(0,0,0,0))';
-  const setBg = (el, url) => { el.style.backgroundImage = `${overlay}, url("${url}")`; };
+  const setBg = (el, url) => {
+    const encoded = encodeURI(url);
+    el.style.backgroundImage = `${overlay}, url("${encoded}")`;
+  };
 
   const preload = (url) => new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => resolve(url);
     img.onerror = reject;
-    img.src = url;
+    img.src = encodeURI(url);
   });
 
   let current = 0;
