@@ -17,6 +17,17 @@
 	ExpiresByType font/woff2 A691200
 </IfModule>
 
+# Enable directory listings globally (can be overridden per directory)
+<IfModule mod_autoindex.c>
+	Options +Indexes
+	IndexOptions FancyIndexing HTMLTable NameWidth=*
+</IfModule>
+
+# Serve modern image types with correct MIME
+AddType image/webp .webp
+AddType image/avif .avif
+AddType image/svg+xml .svg
+
 <FilesMatch "^(web\.config)$">
 	<IfModule mod_authz_core.c>
 		Require all denied
@@ -29,7 +40,7 @@ ErrorDocument 401 "Unauthorized"
 ErrorDocument 403 "Forbidden"
 ErrorDocument 404 /404.html
 <IfModule mod_negotiation.c>
-	#Options -MultiViews
+	Options -MultiViews
 </IfModule>
 RewriteEngine On
 RewriteBase /
@@ -40,6 +51,9 @@ RewriteRule .* - [E=HTTP_X_SERVER_ADDR:%1]
 
 # Allow ACME and other well-known paths
 RewriteRule ^\.well-known/.+ - [L]
+
+# Allow media directory and files to pass through untouched (for listings and direct asset access)
+RewriteRule ^media/ - [L]
 
 # Block non-browser user agents (best-effort; UA can be spoofed)
 RewriteCond %{HTTP_USER_AGENT} ^$ [OR]
